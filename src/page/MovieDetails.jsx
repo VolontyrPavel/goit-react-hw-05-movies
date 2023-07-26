@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState, useCallback } from 'react';
 import {
   useParams,
   Link,
@@ -15,16 +15,11 @@ const MovieDetails = () => {
   const [, setIsLoading] = useState(false);
   const [, setError] = useState(null);
   const { movieId } = useParams();
-  
+
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    setIsLoading(true);
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const data = await getMoviesById(movieId);
       setMovie(data);
@@ -33,7 +28,12 @@ const MovieDetails = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [movieId]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetchData();
+  }, [fetchData]);
 
   const goBackLink = () => {
     navigate(location.state || '/');

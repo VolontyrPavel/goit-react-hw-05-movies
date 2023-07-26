@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { getMoviesByRewiews } from '../service/getService';
 import { ReviewsList } from '../components/ReviewsList';
 
@@ -9,12 +9,7 @@ const Reviews = () => {
   const [, setError] = useState(null);
   const { movieId } = useParams();
 
-  useEffect(() => {
-    setIsLoading(true);
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const { results } = await getMoviesByRewiews(movieId);
       setReviews(results);
@@ -23,7 +18,12 @@ const Reviews = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [movieId]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetchData();
+  }, [fetchData]);
 
   return (
     reviews &&
