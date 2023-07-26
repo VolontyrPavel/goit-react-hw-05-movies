@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams, useParams, useLocation, Link } from 'react-router-dom';
+import { useSearchParams, useLocation, Link } from 'react-router-dom';
 
 import { MovieSearchForm } from '../components/MovieSearchForm';
 import { MoviesList } from '../components/MoviesList';
@@ -10,10 +10,9 @@ const Movies = () => {
   const [movies, setMovies] = useState([]);
   const [, setIsLoading] = useState(false);
   const [, setError] = useState(null);
-  const { movieId } = useParams();
   
   const location = useLocation();
-
+  console.log(location);
   const searchValue = searchParams.get('query');
 
   useEffect(() => {
@@ -29,7 +28,6 @@ const Movies = () => {
       setError(error.message);
     } finally {
       setIsLoading(false);
-      setSearchParams({});
     }
   };
 
@@ -40,7 +38,7 @@ const Movies = () => {
         setSearchParams={setSearchParams}
         searchValue={searchValue}
       />
-      <Link to={`/movies/${movieId}`} state={location}></Link>
+      <Link to="/movies/:movieId" state={location}></Link>
       <MoviesList movies={movies} />
     </>
   );

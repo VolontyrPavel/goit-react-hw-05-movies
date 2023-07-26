@@ -16,9 +16,6 @@ const MovieDetails = () => {
   const [, setError] = useState(null);
   const { movieId } = useParams();
 
-  const navigate = useNavigate();
-  const location = useLocation();
-
   const fetchData = useCallback(async () => {
     try {
       const data = await getMoviesById(movieId);
@@ -34,6 +31,11 @@ const MovieDetails = () => {
     setIsLoading(true);
     fetchData();
   }, [fetchData]);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  console.log('2', location);
 
   const goBackLink = () => {
     navigate(location.state || '/');
