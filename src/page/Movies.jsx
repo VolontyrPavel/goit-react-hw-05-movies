@@ -12,7 +12,7 @@ const Movies = () => {
   const [, setError] = useState(null);
   
   const location = useLocation();
-  console.log(location);
+  // console.log(location);
   const searchValue = searchParams.get('query');
 
   useEffect(() => {
@@ -28,6 +28,7 @@ const Movies = () => {
       setError(error.message);
     } finally {
       setIsLoading(false);
+      setSearchParams({ query: '' });
     }
   };
 

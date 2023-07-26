@@ -35,7 +35,7 @@ const MovieDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  console.log('2', location);
+  // console.log('2', location);
 
   const goBackLink = () => {
     navigate(location.state || '/');
