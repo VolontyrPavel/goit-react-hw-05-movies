@@ -1,25 +1,24 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams, useLocation, Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import { MovieSearchForm } from '../components/MovieSearchForm';
 import { MoviesList } from '../components/MoviesList';
+import { Loader } from '../components/Loader';
 import { getMoviesByQuery } from '../service/getService';
 
 const Movies = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [movies, setMovies] = useState([]);
-  const [, setIsLoading] = useState(false);
-  const [, setError] = useState(null);
-  
-  const location = useLocation();
-  // console.log(location);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const searchValue = searchParams.get('query');
 
   useEffect(() => {
     !searchValue && setSearchParams({});
   }, [searchValue, setSearchParams]);
 
-  const fetchSearchData = async (searchParams) => {
+  const fetchSearchData = async searchParams => {
     setIsLoading(true);
     try {
       const data = await getMoviesByQuery(searchParams);
@@ -34,13 +33,14 @@ const Movies = () => {
 
   return (
     <>
+      {isLoading && <Loader />}
+      {error && <p>Oops... Somesing went wrong...</p>}
       <MovieSearchForm
         fetchSearchData={fetchSearchData}
         setSearchParams={setSearchParams}
         searchValue={searchValue}
       />
-      <Link to="/movies/:movieId" state={location}></Link>
-      <MoviesList movies={movies} />
+      {movies.length > 0 && <MoviesList movies={movies} />}
     </>
   );
 };

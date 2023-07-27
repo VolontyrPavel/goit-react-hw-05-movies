@@ -2,11 +2,12 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState, useCallback } from 'react';
 import { getMoviesByRewiews } from '../service/getService';
 import { ReviewsList } from '../components/ReviewsList';
+import { Loader } from '../components/Loader';
 
 const Reviews = () => {
   const [reviews, setReviews] = useState([]);
-  const [, setIsLoading] = useState(false);
-  const [, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const { movieId } = useParams();
 
   const fetchData = useCallback(async () => {
@@ -26,10 +27,14 @@ const Reviews = () => {
   }, [fetchData]);
 
   return (
-    reviews &&
-    reviews.map(({ id, author, content }) => (
+    <>
+      {isLoading && <Loader />}
+      {error && <p>Oops... Somesing went wrong...</p>}
+      
+      {reviews && reviews.map(({ id, author, content }) => (
       <ReviewsList key={id} author={author} content={content} />
-    ))
+      ))}
+    </>
   );
 };
 

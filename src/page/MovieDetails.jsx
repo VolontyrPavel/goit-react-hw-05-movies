@@ -7,13 +7,14 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import { MovieDetailsItem } from '../components/MovieDetailsItem';
+import { Loader } from '../components/Loader';
 
 import { getMoviesById } from '../service/getService';
 
 const MovieDetails = () => {
   const [movie, setMovie] = useState([]);
-  const [, setIsLoading] = useState(false);
-  const [, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const { movieId } = useParams();
 
   const fetchData = useCallback(async () => {
@@ -35,14 +36,15 @@ const MovieDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // console.log('2', location);
-
   const goBackLink = () => {
-    navigate(location.state || '/');
+    navigate(location.state?.from ?? '/');
   };
 
   return (
     <>
+      {isLoading && <Loader />}
+      {error && <p>Oops... Somesing went wrong...</p>}
+
       <button type="button" onClick={goBackLink}>
         {'<-'}Go back
       </button>
