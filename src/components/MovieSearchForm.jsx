@@ -1,17 +1,21 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 export const MovieSearchForm = ({
-  fetchSearchData,
   setSearchParams,
-  searchValue,
 }) => {
-  const onHandleInput = ({ target: { value } }) => {
-    setSearchParams({ query: value });
+  const [query, setQuery] = useState('');
+
+  const onHandleInput = e => {
+    setQuery(e.currentTarget.value.toLowerCase().trim());
   };
 
   const onHundleSubmit = e => {
     e.preventDefault();
-    fetchSearchData(searchValue);
+    if (!query) {
+      return alert('Заповніть строку пошуку');
+    }
+    setSearchParams(query);
   };
 
   return (
@@ -22,7 +26,7 @@ export const MovieSearchForm = ({
         autoFocus
         placeholder="Search movie"
         onChange={onHandleInput}
-        value={searchValue||''}
+        value={query}
       ></input>
       <button type="submit">Search</button>
     </form>
@@ -30,7 +34,6 @@ export const MovieSearchForm = ({
 };
 
 MovieSearchForm.propType = {
-  fetchSearchData: PropTypes.func.isRequired,
   setSearchParams: PropTypes.object.isRequired,
   searchValue: PropTypes.string,
 };

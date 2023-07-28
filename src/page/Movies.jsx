@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { MovieSearchForm } from '../components/MovieSearchForm';
@@ -12,13 +12,7 @@ const Movies = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const searchValue = searchParams.get('query');
-
-  useEffect(() => {
-    !searchValue && setSearchParams({});
-  }, [searchValue, setSearchParams]);
-
-  const fetchSearchData = async searchParams => {
+  const fetchSearchData = useCallback(async searchParams => {
     setIsLoading(true);
     try {
       const data = await getMoviesByQuery(searchParams);
@@ -27,19 +21,18 @@ const Movies = () => {
       setError(error.message);
     } finally {
       setIsLoading(false);
-      setSearchParams({ query: '' });
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchSearchData(searchParams);
+  }, [searchParams, fetchSearchData]);
 
   return (
     <>
       {isLoading && <Loader />}
       {error && <p>Oops... Somesing went wrong...</p>}
-      <MovieSearchForm
-        fetchSearchData={fetchSearchData}
-        setSearchParams={setSearchParams}
-        searchValue={searchValue}
-      />
+      <MovieSearchForm setSearchParams={setSearchParams} />
       {movies.length > 0 && <MoviesList movies={movies} />}
     </>
   );

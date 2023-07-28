@@ -1,10 +1,9 @@
-import { Suspense, useEffect, useState, useCallback } from 'react';
+import { Suspense, useEffect, useState, useCallback, useRef } from 'react';
 import {
   useParams,
   Link,
   Outlet,
-  useLocation,
-  useNavigate,
+  useLocation
 } from 'react-router-dom';
 import { MovieDetailsItem } from '../components/MovieDetailsItem';
 import { Loader } from '../components/Loader';
@@ -33,21 +32,14 @@ const MovieDetails = () => {
     fetchData();
   }, [fetchData]);
 
-  const navigate = useNavigate();
   const location = useLocation();
-
-  const goBackLink = () => {
-    navigate(location.state?.from ?? '/');
-  };
+  const goBackLink = useRef(location.state?.from ?? '/')
 
   return (
     <>
       {isLoading && <Loader />}
       {error && <p>Oops... Somesing went wrong...</p>}
-
-      <button type="button" onClick={goBackLink}>
-        {'<-'}Go back
-      </button>
+      <Link to={goBackLink.current}>{'<-'}Go back</Link>
       <MovieDetailsItem
         key={movie.id}
         img={movie.poster_path}
